@@ -22,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class VoteVueGUI extends JFrame {
 
@@ -31,16 +33,21 @@ public class VoteVueGUI extends JFrame {
 	private JPanel cadreQuestion;
 	private JButton btnSuivant;
 	private JLabel erreursPossibles;
+	private JTextField reponse;
+	private JRadioButton boutonSimple;
+	private JRadioButton boutonDetaille;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	private String contReponse;
 	private int nbrVotants;
 	private int nbrParticipants;
 	private int numeroParticipant = 1;
 	private int etapeQuestion = 0;
-	private String participantActif[];
-	private String[][] participants;
-	private JTextField reponse;
+	private String prenomsParticipants[];
+	private String nomsParticipants[];
+	private Boolean estSimple = true;
 	private int phase = 0;
+
 	
 	public static boolean isParsable(String input){
 	    boolean parsable = true;
@@ -111,41 +118,53 @@ public class VoteVueGUI extends JFrame {
 								nbrParticipants = Integer.parseInt(contReponse);
 								erreursPossibles.setText("");
 								phase++;
-								questionUtilisateur.setText("Quel est le nom du 1er participant?");
+								questionUtilisateur.setText("Veuillez choisir le mode de vote simple ou détaillé");
+								boutonSimple.setEnabled(true);
+								boutonDetaille.setEnabled(true);
 							} else {
 								erreursPossibles.setText("Vous devez entrer un nombre!");
 							}
 							break;
-					case 2:
-								if(numeroParticipant==1) {
-									if(etapeQuestion==0) {
-										questionUtilisateur.setText("Quel est le nom du 1er participant?");
-										contReponse = reponse.getText();
-										participantActif[0] = contReponse;
-										etapeQuestion++;
-									} else {
-										questionUtilisateur.setText("Quel est le prénom du 1er participant?");
-										contReponse = reponse.getText();
-										participantActif[1] = contReponse;
-										participants[numeroParticipant] = participantActif;
-										etapeQuestion=0;
-										numeroParticipant++;
-									}
+					case 2: if(boutonDetaille.isSelected()) {
+								estSimple = false;
+							}
+							boutonSimple.setEnabled(false);
+							boutonDetaille.setEnabled(false);
+							phase++;
+							questionUtilisateur.setText("Quel est le nom du 1er participant?");
+							break;
+					case 3: if(numeroParticipant<=1) {
+								if(etapeQuestion<=0) {
+									contReponse = reponse.getText();
+									nomsParticipants = new String[] {contReponse};
+									etapeQuestion++;
+									questionUtilisateur.setText("Quel est le prénom du 1er participant?");
 								} else {
-									if(etapeQuestion==0) {
-										questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
-										contReponse = reponse.getText();
-										participantActif[0] = contReponse;
-										etapeQuestion++;
+									contReponse = reponse.getText();
+									prenomsParticipants = new String[] {contReponse};
+									etapeQuestion=0;
+									numeroParticipant++;
+									questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
+								}
+							} else if(numeroParticipant>1) {
+								if(etapeQuestion==0) {
+									contReponse = reponse.getText();
+									nomsParticipants = new String[] {contReponse};
+									etapeQuestion++;
+									questionUtilisateur.setText("Quel est le prénom du "+ numeroParticipant +"eme participant?");
+								} else {
+									contReponse = reponse.getText();
+									prenomsParticipants = new String[] {contReponse};
+									etapeQuestion=0;
+									numeroParticipant++;
+									if(numeroParticipant-1>=nbrParticipants) {
+										phase++;
+										break;
 									} else {
-										questionUtilisateur.setText("Quel est le prénom du "+ numeroParticipant +"eme participant?");
-										contReponse = reponse.getText();
-										participantActif[1] = contReponse;
-										participants[numeroParticipant] = participantActif;
-										etapeQuestion=0;
-										numeroParticipant++;
+										questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
 									}
 								}
+							}
 							break;
 				}
 				
@@ -167,7 +186,7 @@ public class VoteVueGUI extends JFrame {
 		gbl_cadreQuestion.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		cadreQuestion.setLayout(gbl_cadreQuestion);
 		
-		questionUtilisateur = new JLabel("Combien y a-t-il de votants?");
+		questionUtilisateur = new JLabel("Combien y a-t-il de personnes a elire?");
 		GridBagConstraints gbc_questionUtilisateur = new GridBagConstraints();
 		gbc_questionUtilisateur.gridx = 0;
 		gbc_questionUtilisateur.gridy = 0;
@@ -191,12 +210,33 @@ public class VoteVueGUI extends JFrame {
 		gbc_btnSuivant.gridy = 2;
 		contentPane.add(btnSuivant, gbc_btnSuivant);
 		
+		boutonSimple = new JRadioButton("Simple");
+		boutonSimple.setSelected(true);
+		boutonSimple.setEnabled(false);
+		buttonGroup.add(boutonSimple);
+		GridBagConstraints gbc_simple = new GridBagConstraints();
+		gbc_simple.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_simple.insets = new Insets(0, 0, 5, 0);
+		gbc_simple.gridx = 1;
+		gbc_simple.gridy = 2;
+		contentPane.add(boutonSimple, gbc_simple);
+		
 		erreursPossibles = new JLabel("");
 		GridBagConstraints gbc_erreursPossibles = new GridBagConstraints();
 		gbc_erreursPossibles.insets = new Insets(0, 0, 5, 5);
 		gbc_erreursPossibles.gridx = 0;
 		gbc_erreursPossibles.gridy = 3;
 		contentPane.add(erreursPossibles, gbc_erreursPossibles);
+		
+		boutonDetaille = new JRadioButton("Detaill\u00E9");
+		boutonDetaille.setEnabled(false);
+		buttonGroup.add(boutonDetaille);
+		GridBagConstraints gbc_detaille = new GridBagConstraints();
+		gbc_detaille.anchor = GridBagConstraints.NORTHWEST;
+		gbc_detaille.insets = new Insets(0, 0, 5, 0);
+		gbc_detaille.gridx = 1;
+		gbc_detaille.gridy = 3;
+		contentPane.add(boutonDetaille, gbc_detaille);
 		
 		JLabel lblBienvenueDansLe = new JLabel("Bienvenue dans le cr\u00E9ateur de votes de Rapha\u00EBl De Mal, Ga\u00EBl Dieuzeide et Cl\u00E9ment Berlanger");
 		lblBienvenueDansLe.setFont(new Font("Tahoma", Font.PLAIN, 8));
