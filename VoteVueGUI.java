@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,10 +44,15 @@ public class VoteVueGUI extends JFrame {
 	private int nbrParticipants;
 	private int numeroParticipant = 1;
 	private int etapeQuestion = 0;
-	private String prenomsParticipants[];
-	private String nomsParticipants[];
+	private ArrayList prenomsParticipants = new ArrayList();
+	private ArrayList nomsParticipants = new ArrayList();
 	private Boolean estSimple = true;
+	private String nomCompletParticipant;
+	private String listeParticipants = "Les différents participants sont les suivants : ";
+	private int[] resultatsVoteSimple;
+	private ArrayList nbrDeVotesParParticipant = new ArrayList();
 	private int phase = 0;
+	private int numeroCandidatvote;
 
 	
 	public static boolean isParsable(String input){
@@ -81,23 +87,23 @@ public class VoteVueGUI extends JFrame {
 	public VoteVueGUI() {
 		setTitle("Cr\u00E9ateur de votes");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 300);
+		setBounds(100, 100, 600, 350);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{472, 86, 0};
-		gbl_contentPane.rowHeights = new int[]{14, 37, 23, 155, 10, 0};
+		gbl_contentPane.rowHeights = new int[]{14, 37, 23, 155, 10, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		lblVeuillezSuivreLes = new JLabel("Veuillez suivre les instructions suivantes pour cr\u00E9er vos \u00E9lections person\u00E9lis\u00E9es : ");
-		GridBagConstraints gbc_lblVeuillezSuivreLes = new GridBagConstraints();
-		gbc_lblVeuillezSuivreLes.insets = new Insets(0, 0, 5, 5);
-		gbc_lblVeuillezSuivreLes.gridx = 0;
-		gbc_lblVeuillezSuivreLes.gridy = 0;
-		contentPane.add(lblVeuillezSuivreLes, gbc_lblVeuillezSuivreLes);
+		GridBagConstraints gbc_lblVeuillezSuivreLesInstructions = new GridBagConstraints();
+		gbc_lblVeuillezSuivreLesInstructions.insets = new Insets(0, 0, 5, 5);
+		gbc_lblVeuillezSuivreLesInstructions.gridx = 0;
+		gbc_lblVeuillezSuivreLesInstructions.gridy = 0;
+		contentPane.add(lblVeuillezSuivreLes, gbc_lblVeuillezSuivreLesInstructions);
 		
 		btnSuivant = new JButton("Suivant");
 		btnSuivant.addMouseListener(new MouseAdapter() {
@@ -108,7 +114,7 @@ public class VoteVueGUI extends JFrame {
 								nbrVotants = Integer.parseInt(contReponse);
 								erreursPossibles.setText("");
 								phase++;
-								questionUtilisateur.setText("Combien de personnes peuvent-elles voter?");
+								questionUtilisateur.setText("Combien de personnes y a-t-il à élire?");
 							} else {
 								erreursPossibles.setText("Vous devez entrer un nombre!");
 							}
@@ -136,34 +142,97 @@ public class VoteVueGUI extends JFrame {
 					case 3: if(numeroParticipant<=1) {
 								if(etapeQuestion<=0) {
 									contReponse = reponse.getText();
-									nomsParticipants = new String[] {contReponse};
+									nomsParticipants.add(contReponse);
 									etapeQuestion++;
 									questionUtilisateur.setText("Quel est le prénom du 1er participant?");
 								} else {
 									contReponse = reponse.getText();
-									prenomsParticipants = new String[] {contReponse};
-									etapeQuestion=0;
-									numeroParticipant++;
-									questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
-								}
-							} else if(numeroParticipant>1) {
-								if(etapeQuestion==0) {
-									contReponse = reponse.getText();
-									nomsParticipants = new String[] {contReponse};
-									etapeQuestion++;
-									questionUtilisateur.setText("Quel est le prénom du "+ numeroParticipant +"eme participant?");
-								} else {
-									contReponse = reponse.getText();
-									prenomsParticipants = new String[] {contReponse};
+									prenomsParticipants.add(contReponse);
 									etapeQuestion=0;
 									numeroParticipant++;
 									if(numeroParticipant-1>=nbrParticipants) {
+										for(int i = 0; i <= nbrParticipants-1; i++) {
+											nomCompletParticipant = i+1+") "+nomsParticipants.get(i)+" "+prenomsParticipants.get(i);
+											listeParticipants = listeParticipants.concat(nomCompletParticipant);
+											if(i!=nbrParticipants-1) {
+												listeParticipants += ", ";
+											}
+										}
 										phase++;
+										if(estSimple) {
+											questionUtilisateur.setText("Quel est ton vote?"+listeParticipants+". Veuillez entrer le numéro correspondant à la personne pour laquelle vous désirez voter.");
+										} else {
+											questionUtilisateur.setText("Quel est ton nom?");
+										}
 										break;
 									} else {
 										questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
 									}
 								}
+							} else if(numeroParticipant>1) {
+								if(etapeQuestion==0) {
+									contReponse = reponse.getText();
+									nomsParticipants.add(contReponse);
+									etapeQuestion++;
+									questionUtilisateur.setText("Quel est le prénom du "+ numeroParticipant +"eme participant?");
+								} else {
+									contReponse = reponse.getText();
+									prenomsParticipants.add(contReponse);
+									etapeQuestion=0;
+									numeroParticipant++;
+									if(numeroParticipant-1>=nbrParticipants) {
+										for(int i = 0; i <= nbrParticipants-1; i++) {
+											nomCompletParticipant = i+1+") "+nomsParticipants.get(i)+" "+prenomsParticipants.get(i);
+											listeParticipants = listeParticipants.concat(nomCompletParticipant);
+											if(i!=nbrParticipants-1) {
+												listeParticipants += ", ";
+											}
+										}
+										phase++;
+										if(estSimple) {
+											questionUtilisateur.setText("Quel est ton vote?\n"+listeParticipants+".\n Veuillez entrer le numéro correspondant à la personne pour laquelle vous désirez voter.");
+										} else {
+											questionUtilisateur.setText("Quel est ton nom?");
+										}
+										break;
+									} else {
+										questionUtilisateur.setText("Quel est le nom du "+ numeroParticipant +"eme participant?");
+									}
+								}
+							}
+							break;
+					case 4: if(estSimple) { //quand on a choisi simple
+								contReponse = reponse.getText();
+								if(isParsable(contReponse)) {
+									if(Integer.parseInt(contReponse)<1 || Integer.parseInt(contReponse)>nbrParticipants){
+										erreursPossibles.setText("veuillez entrer un numéro de candidat valide!");
+									} else {
+										erreursPossibles.setText("Tu as voté pour le candidat numéro : "+contReponse);
+										resultatsVoteSimple.add(Integer.parseInt(contReponse));
+									}
+								} else {
+									erreursPossibles.setText("Vous devez entrer un nombre!");
+								}
+								if(nbrVotants==resultatsVoteSimple.length) {
+									questionUtilisateur.setText("Les vote sont terminés, veuillez cliquer sur suivant pour voir les résultats");
+									phase++;
+								} else {
+									questionUtilisateur.setText("Quel est ton vote?\n"+listeParticipants+".\n Veuillez entrer le numéro correspondant à la personne pour laquelle vous désirez voter.");
+								}
+							} else { //quand on a choisi détaillé
+							
+							}
+							break;
+					case 5:	if(estSimple) { //quand on a choisi simple
+								for(int i = 0; i <= nbrParticipants-1; i++) {
+									nbrDeVotesParParticipant.add(0);
+								}
+								for(int i = 0; i <= resultatsVoteSimple.size(); i++) {
+									numeroCandidatvote = resultatsVoteSimple.get(i);
+									nbrDeVotesParParticipant.get(numeroCandidatvote);
+								}
+							} else { //quand on a choisi détaillé
+								
 							}
 							break;
 				}
@@ -174,7 +243,7 @@ public class VoteVueGUI extends JFrame {
 		cadreQuestion = new JPanel();
 		cadreQuestion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Instructions", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		GridBagConstraints gbc_cadreQuestion = new GridBagConstraints();
-		gbc_cadreQuestion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cadreQuestion.fill = GridBagConstraints.BOTH;
 		gbc_cadreQuestion.insets = new Insets(0, 0, 5, 5);
 		gbc_cadreQuestion.gridx = 0;
 		gbc_cadreQuestion.gridy = 1;
@@ -182,12 +251,13 @@ public class VoteVueGUI extends JFrame {
 		GridBagLayout gbl_cadreQuestion = new GridBagLayout();
 		gbl_cadreQuestion.columnWidths = new int[]{449, 0};
 		gbl_cadreQuestion.rowHeights = new int[]{0, 0};
-		gbl_cadreQuestion.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_cadreQuestion.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_cadreQuestion.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_cadreQuestion.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		cadreQuestion.setLayout(gbl_cadreQuestion);
 		
-		questionUtilisateur = new JLabel("Combien y a-t-il de personnes a elire?");
+		questionUtilisateur = new JLabel("Combien de personnes peuvent-elles voter?");
 		GridBagConstraints gbc_questionUtilisateur = new GridBagConstraints();
+		gbc_questionUtilisateur.anchor = GridBagConstraints.NORTH;
 		gbc_questionUtilisateur.gridx = 0;
 		gbc_questionUtilisateur.gridy = 0;
 		cadreQuestion.add(questionUtilisateur, gbc_questionUtilisateur);
@@ -223,7 +293,7 @@ public class VoteVueGUI extends JFrame {
 		
 		erreursPossibles = new JLabel("");
 		GridBagConstraints gbc_erreursPossibles = new GridBagConstraints();
-		gbc_erreursPossibles.insets = new Insets(0, 0, 5, 5);
+		gbc_erreursPossibles.insets = new Insets(0, 0, 5, 0);
 		gbc_erreursPossibles.gridx = 0;
 		gbc_erreursPossibles.gridy = 3;
 		contentPane.add(erreursPossibles, gbc_erreursPossibles);
@@ -244,7 +314,7 @@ public class VoteVueGUI extends JFrame {
 		gbc_lblBienvenueDansLe.anchor = GridBagConstraints.SOUTH;
 		gbc_lblBienvenueDansLe.insets = new Insets(0, 0, 0, 5);
 		gbc_lblBienvenueDansLe.gridx = 0;
-		gbc_lblBienvenueDansLe.gridy = 4;
+		gbc_lblBienvenueDansLe.gridy = 5;
 		contentPane.add(lblBienvenueDansLe, gbc_lblBienvenueDansLe);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{contentPane}));
 	}
