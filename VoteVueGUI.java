@@ -1,9 +1,5 @@
 package ProjetJava;
 
-/**
- * @author De Mal Raphaël, Dieuzeide Gaël
- */
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,16 +21,17 @@ public class VoteVueGUI extends VoteVue {
 	private JTextField textField;
 	private JButton submit;
 	private int phase = 0;
+	private JButton valider;
 
 	public VoteVueGUI(Vote model, VoteController guiController, int posX, int posY) {
 
 		super(model, guiController);
 
-		// Construction de la fenÃƒÂªtre
+		// Construction de la fenÃƒÂªtre/
 		voteJFrame = new JFrame("vote MVC");
 		voteJFrame.setVisible(true);
 		voteJFrame.setResizable(false);
-		voteJFrame.setPreferredSize(new Dimension(500, 90));
+		voteJFrame.setBounds(500,90, 500, 90);
 		voteJFrame.setFocusTraversalKeysEnabled(false);
 		voteJFrame.setTitle("Cr\u00E9ateur de votes");
 		voteJFrame.getContentPane().setLayout(null);
@@ -42,17 +39,17 @@ public class VoteVueGUI extends VoteVue {
 		zoneQuestion.setHorizontalAlignment(SwingConstants.CENTER);
 		zoneQuestion.setBounds(0, 0, 348, 59);
 		voteJFrame.getContentPane().add(zoneQuestion);
-		zoneQuestion.setText("Combien de votants?");
+		zoneQuestion.setText("Combien de Votants?");
 
 		textField = new JTextField();
 		textField.setBounds(349, 24, 145, 35);
 		voteJFrame.getContentPane().add(textField);
 		textField.setColumns(10);
-
-		submit = new JButton("Valider");
-		submit.addMouseListener(new MouseAdapter() {
-
-			public void mouseClicked(MouseEvent arg0) {
+		
+		valider = new JButton("New button");
+		valider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent f) {
 				switch (phase) {
 				case 0:
 					while (true) {
@@ -155,11 +152,8 @@ public class VoteVueGUI extends VoteVue {
 				}
 			}
 		});
-		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
+		valider.setBounds(374, 0, 89, 23);
+		voteJFrame.getContentPane().add(valider);
 	}
 
 	public void affiche(String msg) {
@@ -170,5 +164,4 @@ public class VoteVueGUI extends VoteVue {
 	public void update(Observable o, Object arg) {
 
 	}
-
 }
