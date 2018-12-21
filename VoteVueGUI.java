@@ -23,6 +23,7 @@ public class VoteVueGUI extends VoteVue {
 	private int phase = 0;
 	private JButton valider;
 	private int numeroCandidat = 1;
+	private int numeroVotant = 1;
 
 	public static boolean isParsable(String input) {
 		boolean parsable = true;
@@ -82,6 +83,7 @@ public class VoteVueGUI extends VoteVue {
 						phase++;
 					} else {
 						affiche("Vous devez entrer un nombre!");
+						break;
 					}
 					break;
 				case 2:
@@ -89,11 +91,13 @@ public class VoteVueGUI extends VoteVue {
 						int x = Integer.parseInt(textField.getText());
 						if (x != 1 && x != 2) {
 							affiche("Entrez '1'(Simple) ou '2'(Detaillé) s'il vous plait!");
+							break;
 						} else {
 							controller.choix(x);
 						}
 					} else {
 						affiche("Vous devez entrer un nombre!");
+						break;
 					}
 					affiche("Quel est le nom du participant numero 1?");
 					phase++;
@@ -109,30 +113,26 @@ public class VoteVueGUI extends VoteVue {
 							affiche("Quel est ton vote?" + controller.str
 									+ ". Veuillez entrer le numéro correspondant à la personne pour laquelle vous désirez voter.");
 						} else {
-							affiche("Donne ton nom,ton age et ton vote espacé, ex:'Gael 20 3");
+							affiche("Veuillez entrer votre nom,votre age et votre vote espacé, ex:'Gael 20 3'");
 						}
 						phase++;
 					}
 					break;
 				case 4:
 					if (controller.choix == 1) {
-						for (int i = 1; i < controller.nombredeVotants; i++) {
-							while (true) {
-								try {
-									affiche("Quel est ton vote?(Si le vote est un mauvais nombre: Vote blanc)"
-											+ controller.str);
-									int d = Integer.parseInt(textField.getText());
-									controller.vote(d, i);
-									break;
-								} catch (InputMismatchException d) {
-									affiche("Entrez un nombre s'il vous plait!\n");
-									continue;
-								}
+						if (isParsable(textField.getText())) {
+							int d = Integer.parseInt(textField.getText());
+							controller.vote(d, numeroCandidat - 1);
+							numeroVotant++;
+							if (numeroVotant - 1 >= controller.nombredeVotants) {
+								controller.depouillage();
+								controller.pourcentages();
+								controller.gagnant();
+								break;
 							}
+						} else {
+							affiche("Entrez un nombre s'il vous plait!\n");
 						}
-						controller.depouillage();
-						controller.pourcentages();
-						controller.gagnant();
 					} else {
 						for (int i = 0; i < controller.nombredeVotants; i++) {
 							while (true) {
@@ -155,6 +155,7 @@ public class VoteVueGUI extends VoteVue {
 						}
 						controller.depouillage();
 						controller.pourcentagesDetail();
+						break;
 					}
 				}
 			}
