@@ -71,14 +71,14 @@ public class VoteVueGUI extends VoteVue {
 		voteJFrame.setFocusTraversalKeysEnabled(false);
 		voteJFrame.setTitle("Cr\u00E9ateur de votes");
 		voteJFrame.getContentPane().setLayout(null);
-		zoneQuestion.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		zoneQuestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		zoneQuestion.setHorizontalAlignment(SwingConstants.CENTER);
-		zoneQuestion.setBounds(0, 0, 449, 171);
+		zoneQuestion.setBounds(0, 0, 854, 171);
 		voteJFrame.getContentPane().add(zoneQuestion);
 		zoneQuestion.setText("Combien de Votants y a-t-il?");
 
 		textField = new JTextField();
-		textField.setBounds(449, 77, 145, 35);
+		textField.setBounds(854, 77, 140, 35);
 		voteJFrame.getContentPane().add(textField);
 		textField.setColumns(10);
 
@@ -180,7 +180,7 @@ public class VoteVueGUI extends VoteVue {
 				}
 			}
 		});
-		valider.setBounds(449, 56, 145, 23);
+		valider.setBounds(854, 56, 140, 23);
 		voteJFrame.getContentPane().add(valider);
 	}
 	/**
