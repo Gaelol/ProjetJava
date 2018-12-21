@@ -16,15 +16,39 @@ import javax.swing.SwingConstants;
 
 public class VoteVueGUI extends VoteVue {
 
+	/**
+	 * the creator of the JFrame
+	 */
 	private JFrame voteJFrame;
+	/**
+	 * the JLabel where we interact with the user
+	 */
 	private final JLabel zoneQuestion = new JLabel("");
+	/**
+	 * the JTextField where communicate with the user
+	 */
 	private JTextField textField;
-	private JButton submit;
+	/**
+	 * an int used to determine where at witch phase of the app we are
+	 */
 	private int phase = 0;
+	/**
+	 * the button the user presses to submit his answer
+	 */
 	private JButton valider;
+	/**
+	 * an int used as an iterator in phase 3
+	 */
 	private int numeroCandidat = 1;
+	/**
+	 * an int used as an iterator in phase 4
+	 */
 	private int numeroVotant = 1;
-
+	/**
+	 * this method takes a string and makes sure it is parsable
+	 * @param input the String to be parsed
+	 * @return parsable is true if the String is parsable
+	 */
 	public static boolean isParsable(String input) {
 		boolean parsable = true;
 		try {
@@ -39,26 +63,29 @@ public class VoteVueGUI extends VoteVue {
 
 		super(model, guiController);
 
-		// Construction de la fenÃƒÂªtre/
+		// Construction de la fenetre/
 		voteJFrame = new JFrame("vote MVC");
 		voteJFrame.setVisible(true);
 		voteJFrame.setResizable(false);
-		voteJFrame.setBounds(600, 90, 600, 90);
+		voteJFrame.setBounds(1000, 200, 1000, 200);
 		voteJFrame.setFocusTraversalKeysEnabled(false);
 		voteJFrame.setTitle("Cr\u00E9ateur de votes");
 		voteJFrame.getContentPane().setLayout(null);
 		zoneQuestion.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		zoneQuestion.setHorizontalAlignment(SwingConstants.CENTER);
-		zoneQuestion.setBounds(0, 0, 449, 59);
+		zoneQuestion.setBounds(0, 0, 449, 171);
 		voteJFrame.getContentPane().add(zoneQuestion);
 		zoneQuestion.setText("Combien de Votants y a-t-il?");
 
 		textField = new JTextField();
-		textField.setBounds(449, 24, 145, 35);
+		textField.setBounds(449, 77, 145, 35);
 		voteJFrame.getContentPane().add(textField);
 		textField.setColumns(10);
 
 		valider = new JButton("Valider");
+		/**
+		 * this method reacts to the button valider being clicked and reacts to it with a switch where every case is a step in the app
+		 */
 		valider.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent f) {
@@ -122,7 +149,7 @@ public class VoteVueGUI extends VoteVue {
 					if (controller.choix == 1) {
 						if (isParsable(textField.getText())) {
 							int d = Integer.parseInt(textField.getText());
-							controller.vote(d, numeroCandidat - 1);
+							controller.vote(d, numeroVotant - 1);
 							numeroVotant++;
 							if (numeroVotant - 1 >= controller.nombredeVotants) {
 								controller.depouillage();
@@ -134,36 +161,32 @@ public class VoteVueGUI extends VoteVue {
 							affiche("Entrez un nombre s'il vous plait!\n");
 						}
 					} else {
-						for (int i = 0; i < controller.nombredeVotants; i++) {
-							while (true) {
-								try {
-									affiche("Donne ton nom,ton age et ton vote espacÃ©, ex:'Gael 20 3");
-									String s = textField.getText();
-									String decoupe[] = s.split(" ");
-									String d = decoupe[0];
-									int k = Integer.parseInt(decoupe[1]);
-									int j = Integer.parseInt(decoupe[2]);
-									controller.votantComplet(d, k, j, i);
-									break;
-								} catch (InputMismatchException d) {
-									affiche("Entrez un nombre s'il vous plait!");
-									continue;
-								}
+						affiche("Donne ton nom,ton age et ton vote espacÃ© et sans autre espace supplémentaire, ex:'Gael 20 3\'");
+						String s = textField.getText();
+						String decoupe[] = s.split(" ");
+						String d = decoupe[0];
+						int k = Integer.parseInt(decoupe[1]);
+						int j = Integer.parseInt(decoupe[2]);
 
-							}
-
+						controller.votantComplet(d, k, j, numeroVotant - 1);
+						numeroVotant++;
+						if (numeroVotant - 1 >= controller.nombredeVotants) {
+							controller.depouillage();
+							controller.pourcentagesDetail();
+							break;
 						}
-						controller.depouillage();
-						controller.pourcentagesDetail();
 						break;
 					}
 				}
 			}
 		});
-		valider.setBounds(449, 0, 145, 23);
+		valider.setBounds(449, 56, 145, 23);
 		voteJFrame.getContentPane().add(valider);
 	}
-
+	/**
+	 * this method takes a string and places it in the textZone of the zoneQuestion
+	 * @param msg the String being placed in the textZone
+	 */
 	public void affiche(String msg) {
 		zoneQuestion.setText(msg);
 	}
