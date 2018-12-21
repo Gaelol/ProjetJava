@@ -1,4 +1,4 @@
-package ProjetJava;
+package ProjetJava.view;
 /**
  * @author De Mal Raphaël, Dieuzeide Gaël
  */
@@ -7,14 +7,14 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 
-/**
- * @author gael-
- *
- */
+import ProjetJava.controller.VoteController;
+import ProjetJava.model.Vote;
+
 public class VoteVueConsole extends VoteVue implements Observer {
 	protected Scanner sc;
 
 	/**
+	 * Scanner that open a new thread on the controller
 	 * @param model
 	 * @param controller
 	 */
@@ -26,13 +26,24 @@ public class VoteVueConsole extends VoteVue implements Observer {
 	}
 
 	@Override
+	/**
+	 * update the the controller
+	 */
 	public void update(Observable o, Object arg) {
 		System.out.println(model);
 	}
-
+/**
+ * ask :
+ * the number of votant
+ * the number of candidates
+ * the kind of vote
+ * the names of the candidate
+ * the names vote and age of votantes
+ * give back the winner
+ *
+ */
 	private class ReadInput implements Runnable {
 		public void run() {
-
 			while (true) {
 				try {
 					affiche("Combien de votants?");
@@ -147,7 +158,9 @@ public class VoteVueConsole extends VoteVue implements Observer {
 			}
 		}
 	}
-
+/**
+ * define the way to print on the views
+ */
 	@Override
 	public void affiche(String string) {
 		System.out.println(string);
