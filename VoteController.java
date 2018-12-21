@@ -1,4 +1,4 @@
-package ProjetJava.controller;
+package ProjetJava;
 
 /**
  * @author De Mal Raphaël, Dieuzeide Gaël
@@ -8,8 +8,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import ProjetJava.model.Vote;
-import ProjetJava.view.VoteVue;
+import ProjetJava.Vote;
+import ProjetJava.VoteVue;
 
 public class VoteController {
 	Vote model;
@@ -18,19 +18,12 @@ public class VoteController {
 	 * the amount of people able to vote
 	 */
 	public int nombredeVotants = 0;
-	/**
-	 * allow to drop a line 
-	 */
 	public String newLine =System.getProperty("line.separator");
 	/**
 	 * the amount of people you can vote for
 	 */
-	
+	public String resultat = "";
 	public int nombredeParticipants = 0;
-	/**
-	 * initiate the string of the result
-	 */
-	public String resultat ="";
 	/**
 	 * the choice the user makes when creating his election when chosing between
 	 * 'simple'(1) or 'détaillé'(2)
@@ -40,7 +33,7 @@ public class VoteController {
 	 * the url used to acces the database containing all the date of the election
 	 * system created
 	 */
-	public String url = "jdbc:mysql:localhost://3306/demo";
+	public String url = "jdbc:mysql://localhost:3306/demo";
 	/**
 	 * the username used to log in the database
 	 */
