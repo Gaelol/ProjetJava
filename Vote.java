@@ -1,20 +1,21 @@
 package ProjetJava;
+
+/**
+ * @author De Mal Raphaël, Dieuzeide Gaël
+ */
 import java.time.LocalDate;
 import java.util.Observable;
-import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 public class Vote extends Observable {
-	/*
+	/**
 	 * the name of the person
 	 */
 	protected String nom;
-	/*
+	/**
 	 * the forename of the person
 	 */
 	protected String prenom;
-	/*
+	/**
 	 * The birth of the person
 	 */
 	protected LocalDate dateNaissance;
@@ -26,63 +27,83 @@ public class Vote extends Observable {
 	 * The age of the person
 	 */
 	protected int age;
-	
+
+	/**
+	 * @return the name of the person
+	 */
 	public String getNom() {
 		return nom;
 	}
+
+	/**
+	 * 
+	 * @param nom the name of the person to set
+	 */
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+
+	/**
+	 * @return the forename of the person
+	 */
 	public String getPrenom() {
 		return prenom;
 	}
+
+	/**
+	 * 
+	 * @param prenom the forename of the person to set
+	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
+
+	/**
+	 * @return the date of birth of the person
+	 */
 	public LocalDate getDateNaissance() {
 		return dateNaissance;
 	}
+
+	/**
+	 * 
+	 * @param dateNaissance the date of birth of the person to set
+	 */
 	public void setDateNaissance(LocalDate dateNaissance) {
 		this.dateNaissance = dateNaissance;
 	}
+
+	/**
+	 * @return the id of the participant the person voted for
+	 */
 	public int getVote() {
 		return vote;
 	}
+
+	/**
+	 * 
+	 * @param vote id of the participant the person voted for to set
+	 */
 	public void setVote(int vote) {
 		this.vote = vote;
 	}
-	
-	/*
-	 * this method gives the age of the person based on his birthday and on the current date
+
+	/**
+	 * this method gives the age of the person based on his birthday and on the
+	 * current date
+	 * 
 	 * @return an int representing the age of the person now
 	 */
 	public int age() {
-  		return (LocalDate.now().getYear()-dateNaissance.getYear());
+		return (LocalDate.now().getYear() - dateNaissance.getYear());
 	}
-	
-	
-	/*@Override
-	public String toString() {
-		return nom +" "+ prenom +"("+ age + " ans) a voté pour le candidat numéro " + vote;
-	}*/
-	/**
-	 * This is a constructor ask the name forename, age and vote 
-	 * @param nom
-	 * @param prenom
-	 * @param age
-	 * @param vote
-	 */
-	/*public Vote() {
-		this.nom = JOptionPane.showInputDialog("Quel est votre nom?");
-		this.prenom = JOptionPane.showInputDialog("Quel est votre prénom?");
-		this.age = Integer.parseInt(JOptionPane.showInputDialog("Quel est votre age?"));
-		this.vote = Integer.parseInt(JOptionPane.showInputDialog("Pour quel candidat(e) votez-vous?"));
-	}*/
+
 	/**
 	 * This is a constructor with the name,forename and birthdate
-	 * @param nom
-	 * @param prenom
-	 * @param dateNaissance
+	 * 
+	 * @param nom           the name of the person
+	 * @param prenom        his forename
+	 * @param dateNaissance his date of birth
 	 */
 	public Vote() {
 		this.nom = nom;
@@ -90,5 +111,4 @@ public class Vote extends Observable {
 		this.dateNaissance = dateNaissance;
 	}
 
-	
 }
