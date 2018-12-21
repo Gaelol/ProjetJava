@@ -18,12 +18,19 @@ public class VoteController {
 	 * the amount of people able to vote
 	 */
 	public int nombredeVotants = 0;
+	/**
+	 * allow to drop a line 
+	 */
 	public String newLine =System.getProperty("line.separator");
 	/**
 	 * the amount of people you can vote for
 	 */
-	public String resultat;
+	
 	public int nombredeParticipants = 0;
+	/**
+	 * initiate the string of the result
+	 */
+	public String resultat ="";
 	/**
 	 * the choice the user makes when creating his election when chosing between
 	 * 'simple'(1) or 'détaillé'(2)
