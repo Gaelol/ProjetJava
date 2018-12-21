@@ -1,35 +1,26 @@
-
-
 package ProjetJava;
 
+/**
+ * @author De Mal Raphaël, Dieuzeide Gaël
+ */
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.InputMismatchException;
 import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
-import ProjetJava.VoteController;
-import ProjetJava.Vote;
-import ProjetJava.VoteVue;
-import ProjetJava.VoteMVC;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class VoteVueGUI extends VoteVue {
 
 	private JFrame voteJFrame;
-	private JTextField numeroLivre = new JTextField(3);
-	private JButton emprunteJButton = new JButton("Emprunter");
-	private JButton rendreJButton = new JButton("Rendre");
-	private JTable table;
 	private final JLabel zoneQuestion = new JLabel("");
 	private JTextField textField;
 	private JButton submit;
@@ -39,8 +30,9 @@ public class VoteVueGUI extends VoteVue {
 
 		super(model, guiController);
 
-		// Construction de la fenÃªtre
+		// Construction de la fenÃƒÂªtre
 		voteJFrame = new JFrame("vote MVC");
+		voteJFrame.setVisible(true);
 		voteJFrame.setResizable(false);
 		voteJFrame.setPreferredSize(new Dimension(500, 90));
 		voteJFrame.setFocusTraversalKeysEnabled(false);
@@ -50,6 +42,7 @@ public class VoteVueGUI extends VoteVue {
 		zoneQuestion.setHorizontalAlignment(SwingConstants.CENTER);
 		zoneQuestion.setBounds(0, 0, 348, 59);
 		voteJFrame.getContentPane().add(zoneQuestion);
+		zoneQuestion.setText("Combien de votants?");
 
 		textField = new JTextField();
 		textField.setBounds(349, 24, 145, 35);
@@ -94,12 +87,12 @@ public class VoteVueGUI extends VoteVue {
 				case 2:
 					while (true) {
 						try {
-							affiche("Quel type de vote? 'Simple(1)' ou 'Detaille(2)'?");
+							affiche("Quel type de vote? Pour simple, tapez '1' ou pour Detaillé tapez '2' ?");
 							int c = Integer.parseInt(textField.getText());
 							controller.choix(c);
 							break;
 						} catch (InputMismatchException e) {
-							affiche("Entrez 'Simple(1)' ou 'Detaille(2)' s'il vous plait!");
+							affiche("Entrez '1'(Simple) ou '2'(Detaillé) s'il vous plait!");
 							continue;
 						}
 					}
@@ -140,7 +133,7 @@ public class VoteVueGUI extends VoteVue {
 						for (int i = 0; i < controller.nombredeVotants; i++) {
 							while (true) {
 								try {
-									affiche("Donne ton nom,ton age et ton vote espacé, ex:'Gael 20 3");
+									affiche("Donne ton nom,ton age et ton vote espacÃ©, ex:'Gael 20 3");
 									String s = textField.getText();
 									String decoupe[] = s.split(" ");
 									String c = decoupe[0];
@@ -162,7 +155,6 @@ public class VoteVueGUI extends VoteVue {
 				}
 			}
 		});
-
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -179,5 +171,4 @@ public class VoteVueGUI extends VoteVue {
 
 	}
 
-	
 }
