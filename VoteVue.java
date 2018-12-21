@@ -14,7 +14,6 @@ public abstract class VoteVue implements Observer{
 			VoteController controller) {
 		this.model = model;
 		this.controller = controller;
-		// TODO : Connexion entre la vue et le modele
 		model.addObserver(this);
 	}
 
