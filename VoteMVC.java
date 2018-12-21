@@ -9,29 +9,27 @@ import ProjetJava.VoteVueGUI;
 
 public class VoteMVC {
 	public VoteMVC() {
-		//Création du modèle
+		//CrÃ©ation du modÃ¨le
 		Vote model = new Vote();
 		//TODO
 
-		//Création des contrôleurs : Un pour chaque vue
-		//Chaque contrôleur doit avoir une référence vers le modèle pour pouvoir le commander
-		VoteController ctrlGUI = new VoteController(model);
-		VoteController ctrlConsole = new VoteController(model);
+		//CrÃ©ation des contrÃ´leurs : Un pour chaque vue
+		//Chaque contrÃ´leur doit avoir une rÃ©fÃ©rence vers le modÃ¨le pour pouvoir le commander
+		VoteController consoleController = new VoteController(model);
+		VoteController guiController = new VoteController(model);
+		
+		
+		
+		//CrÃ©ation des vues.
+		//Chaque vue doit connaÃ®tre son contrÃ´leur et avoir une rÃ©fÃ©rence vers le modÃ¨le pour pouvoir l'observer
+		VoteVueConsole console = new VoteVueConsole(model,consoleController);
+		VoteVueGUI gui = new VoteVueGUI(model,guiController,0,0);
 		
 		//TODO
 		
-		Object posX = 0;
-		Object posY = 0;
-		//Création des vues.
-		//Chaque vue doit connaître son contrôleur et avoir une référence vers le modèle pour pouvoir l'observer
-		//VoteVue gui = new VoteVueGUI(model,ctrlGUI,posX,posY);
-		VoteVue console = new VoteVueConsole(model,ctrlConsole);
-		
-		//TODO
-		
-		//On donne la référence à la vue pour chaque contrôleur
-		//ctrlGUI.addView(gui);
-		ctrlConsole.addView(console);
+		//On donne la rÃ©fÃ©rence Ã  la vue pour chaque contrÃ´leur
+		guiController.addView(gui);
+		consoleController.addView(console);
 		
 		//TODO
 		
@@ -48,3 +46,4 @@ public class VoteMVC {
 		});
 	}
 }
+
