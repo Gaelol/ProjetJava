@@ -1,4 +1,4 @@
-package ProjetJava;
+package ProjetJava.controller;
 
 /**
  * @author De Mal Raphaël, Dieuzeide Gaël
@@ -8,55 +8,60 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import ProjetJava.model.Vote;
+import ProjetJava.view.VoteVue;
+
 public class VoteController {
 	Vote model;
 	VoteVue vue;
 	/**
 	 * the amount of people able to vote
 	 */
-	int nombredeVotants = 0;
+	public int nombredeVotants = 0;
+	public String newLine =System.getProperty("line.separator");
 	/**
 	 * the amount of people you can vote for
 	 */
-	int nombredeParticipants = 0;
+	public String resultat;
+	public int nombredeParticipants = 0;
 	/**
 	 * the choice the user makes when creating his election when chosing between
 	 * 'simple'(1) or 'détaillé'(2)
 	 */
-	int choix = 0;
+	public int choix = 0;
 	/**
 	 * the url used to acces the database containing all the date of the election
 	 * system created
 	 */
-	String url = "jdbc:mysql://localhost:3306/demo";
+	public String url = "jdbc:mysql:localhost://3306/demo";
 	/**
 	 * the username used to log in the database
 	 */
-	String user = "root";
+	public String user = "root";
 	/**
 	 * the password used to log in the database
 	 */
-	String password = "password";
+	public String password = "password";
 	/**
-	 * TODO
+	 * the connection with the database
 	 */
-	Connection myConn = null;
+	public Connection myConn = null;
 	/**
-	 * TODO
+	 * Statement to access Database
 	 */
-	Statement myStmt = null;
+	public Statement myStmt = null;
 	/**
-	 * TODO
+	 *Response frome the Database
 	 */
-	ResultSet myRs;
+	public ResultSet myRs;
 	/**
-	 * the maximum value used to determin who won the elections
+	 * the maximum value used to determine who won the elections
 	 */
 	int maxVal = Integer.MAX_VALUE;
 	/**
 	 * the String used to show the name of the person to be elected with his id
 	 */
-	String str = " ";
+	public String str = " ";
 	/**
 	 * the name of the person that just voted
 	 */
@@ -64,21 +69,21 @@ public class VoteController {
 	/**
 	 * the age of the person that just voted
 	 */
-	int age = 0;
+	public int age = 0;
 	/**
-	 * TODO
+	 * The maximal size of vote
 	 */
-	int vote = 8524;
+	public int vote = 12534564;
 
 	/**
-	 * TODO
+	 *  Link model to Controller
 	 */
 	public VoteController(Vote model) {
 		this.model = model;
 	}
 
 	/**
-	 * TODO
+	 * Link view to Controller
 	 */
 	public void addView(VoteVue vue) {
 		this.vue = vue;
@@ -117,12 +122,14 @@ public class VoteController {
 	 */
 	int Vote[] = new int[1000];// vote
 	/**
-	 * 
+	 * an array of ints of size 1000 where each component is a name of votants
 	 */
 	String nomdesPart[] = new String[1000];// nom
 
 	/**
-	 * 
+	 * define the name of the participants 
+	 * implements a string  with the name and the number
+	 * Link to Database and add name and values on JDBC
 	 */
 	public void nomParticipants(String nom, int i) {
 		str += "  " + (i + 1) + ")" + nom;
@@ -139,7 +146,7 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * implements the vote in the array Vote
 	 */
 	public void vote(int vote, int i) {
 
@@ -149,7 +156,7 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * implements the number of votes of each candidates
 	 */
 	public void depouillage() {
 		for (int i = 0; i < nombredeParticipants; i++) {
@@ -162,7 +169,8 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * implements the percentage of votant 
+	 * implement also it in Db
 	 */
 	public void pourcentages() {
 		for (int i = 0; i < nombredeParticipants; i++) {
@@ -180,7 +188,8 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * implements the percentage of votant and the average age
+	 * implement it in Db
 	 */
 	public void pourcentagesDetail() {
 		for (int i = 0; i < nombredeParticipants; i++) {
@@ -193,7 +202,7 @@ public class VoteController {
 			} catch (Exception exc) {
 				exc.printStackTrace();
 			}
-			vue.affiche("Participant " + (i + 1) + " " + (participants[i] * 100) / nombredeVotants + "%");
+			resultat+=newLine+("Participant " + (i + 1) + " " + (participants[i] * 100) / nombredeVotants + "%");
 		}
 		for (int i = 0; i < nombredeVotants; i++) {
 			if (Vote[i] < maxVal)
@@ -205,8 +214,9 @@ public class VoteController {
 			myRs.beforeFirst();
 			myRs.next();
 			int avg = myRs.getInt("avg");
-			vue.affiche("Le gagnant est le candidat numero " + maxVal + " : " + nomdesPart[(maxVal - 1)]);
-			vue.affiche("La moyenne d'age des votes pour le gagnant est de " + avg + "ans");
+			resultat +=newLine+("Le gagnant est le candidat numero " + maxVal + " : " + nomdesPart[(maxVal - 1)]);
+			resultat +=newLine+("La moyenne d'age des votes pour le gagnant est de " + avg + "ans");
+			vue.affiche(resultat);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -214,7 +224,7 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * define the winner of the vote and post it
 	 */
 	public void gagnant() {
 		for (int i = 0; i < nombredeVotants; i++) {
@@ -230,8 +240,13 @@ public class VoteController {
 
 	}
 
+	
 	/**
-	 * 
+	 * constructor for a full votant
+	 * @param nom as String
+	 * @param age as int
+	 * @param vot as int
+	 * @param i as iterator(int)
 	 */
 	public void votantComplet(String nom, int age, int vot, int i) {
 		this.nom = nom;
@@ -251,7 +266,7 @@ public class VoteController {
 	}
 
 	/**
-	 * 
+	 * Reset the database
 	 */
 	public void reinitialiserDb() {
 		try {
