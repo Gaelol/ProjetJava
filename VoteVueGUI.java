@@ -1,6 +1,4 @@
-/**
- * @author <a href="mailto:gery.casiez@lifl.fr">Gery Casiez</a>
- */
+
 
 package ProjetJava;
 
